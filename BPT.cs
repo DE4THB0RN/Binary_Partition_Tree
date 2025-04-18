@@ -94,6 +94,7 @@ namespace IC_BPT
 
     internal class BPT
     {
+
         public Node Raiz;
         public Node[] Folhas;
 
@@ -103,7 +104,7 @@ namespace IC_BPT
         }
 
 
-        public void SegmentarBPT(int seed)
+        public Node SegmentarBPT(int seed)
         {
             Node tmp = Folhas[seed];
             tmp.Marca++;
@@ -113,6 +114,8 @@ namespace IC_BPT
                 tmp = tmp.pai;
                 tmp.Marca++;
             }
+
+            return tmp;
         }
 
         public void PrintBPT()
