@@ -25,11 +25,13 @@ bpt.PrintBPT();
 
 int control = 1;
 List<int> seeds = new List<int>();
+List<int> seedsAtuais = new List<int>();
+List<int> seedsRemovidas = new List<int>();
 int seed;
 
 while (control > 0)
 {
-    Console.WriteLine("Inserir seeds: 1  -  Remover seeds: 2  -  Sair: 0");
+    Console.WriteLine("Inserir seeds: 1  -  Remover seeds: 2  - Processar WS(adição): 3 - Processar WS(remoção): 4 - Sair: 0");
     control = Int32.Parse(Console.ReadLine());
 
     if (control == 1)
@@ -58,6 +60,7 @@ while (control > 0)
         else
         {
             seeds.Add(seed);
+            seedsAtuais.Add(seed);
             Console.WriteLine("Vertice " + seed + " adicionado");
         }
     }
@@ -82,6 +85,7 @@ while (control > 0)
             if (seeds.Contains(seed))
             {
                 seeds.Remove(seed);
+                seedsRemovidas.Add(seed);
                 Console.WriteLine("Seed " + seed + " removida");
             }
             else
@@ -91,9 +95,30 @@ while (control > 0)
         }
             
     }
-    else if(control > 2)
+    else if (control == 3)
+    {
+        MST_Edge[] ws_cuts = bpt.AdicionarSeeds(seedsAtuais.ToArray()).ToArray();
+        for (int i = 0; i < ws_cuts.Length; i++)
+        {
+            Console.WriteLine("Aresta: " + ws_cuts[i].para + " - " + ws_cuts[i].de + " peso - " + ws_cuts[i].peso);
+        }
+        seedsAtuais.Clear();
+    }
+    else if (control == 4)
+    {
+        MST_Edge[] ws_cuts = bpt.RemoverSeeds(seedsRemovidas.ToArray()).ToArray();
+        for (int i = 0; i < ws_cuts.Length; i++)
+        {
+            Console.WriteLine("Aresta: " + ws_cuts[i].para + " - " + ws_cuts[i].de + " peso - " + ws_cuts[i].peso);
+        }
+        seedsRemovidas.Clear();
+    }
+    else if (control == 0)
+    {
+        Console.WriteLine("Saindo...");
+    }
+    else
     {
         Console.WriteLine("Engraçadinho");
-        control = 0;
     }
 }

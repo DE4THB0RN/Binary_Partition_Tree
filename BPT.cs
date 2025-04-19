@@ -104,7 +104,6 @@ namespace IC_BPT
             Folhas = new Node[numVertices];
         }
 
-
         public List<MST_Edge> AdicionarSeeds(int[] seed)
         {
             List<MST_Edge> ws_cuts = new List<MST_Edge>();
@@ -115,8 +114,19 @@ namespace IC_BPT
                 tmp = Folhas[seed[i]];
                 while (tmp != Raiz && tmp.Marca != 2)
                 {
+                    
                     tmp = tmp.pai;
                     tmp.Marca++;
+
+                    if (tmp.e_folha)
+                    {
+                        Console.WriteLine("Folha: " + tmp.GetVertice() + " visita - " + tmp.Marca);
+                    }
+                    else
+                    {
+                        Console.WriteLine("Aresta: " + tmp.GetDe() + " -> " + tmp.GetPara() + " peso - " + tmp.GetPeso() + " visita - " + tmp.Marca);
+                    }
+
                     if (tmp.Marca == 2)
                     {
                         ws_cuts.Add(new MST_Edge(tmp.GetDe(), tmp.GetPara(), tmp.GetPeso()));

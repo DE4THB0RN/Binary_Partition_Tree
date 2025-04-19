@@ -136,8 +136,6 @@ namespace IC_BPT
                     }
 
                     nova_aresta = new Node(proxima.de, proxima.para, proxima.peso);
-                    bpt.numArestas++;
-
 
                     pai1 = raizes[x];
                     pai2 = raizes[y];
