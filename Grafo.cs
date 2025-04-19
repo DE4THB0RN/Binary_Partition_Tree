@@ -20,7 +20,7 @@ namespace IC_BPT
     internal class Grafo
     {
         public List<List<Edge>> grafo;
-        private MST mst;
+        public MST mst;
 
         private int numVertices;
 
@@ -60,19 +60,35 @@ namespace IC_BPT
             return numVertices;
         }
 
-        private int Find(int[] parent, int i)
+        private int Find(int[] parent, int q)
         {
-            if (parent[i] == -1)
-                return i;
-            return Find(parent, parent[i]);
+            int r = q,tmp;
+            while (parent[r] >= 0) r = parent[r];
+            while (parent[q] >= 0)
+            {
+                tmp = q;
+                q = parent[q];
+                parent[tmp] = r;
+            }
+            return r;
         }
 
-        private void Union(int[] parent, int x, int y)
+        private void swap(int[] rank, int x, int y)
         {
-            int xset = Find(parent, x);
-            int yset = Find(parent, y);
+            int temp = rank[x];
+            rank[x] = rank[y];
+            rank[y] = temp;
+        }
 
-            parent[xset] = yset;
+        private void Union(int[] parent,int[] rank, int x, int y)
+        {
+            if (rank[x] > rank[y])
+                swap(rank, x, y);
+            if (rank[x] == rank[y])
+                rank[y]++;
+
+            parent[x] = y;
+            return y;
         }
 
         public BPT Kruskal()
@@ -80,14 +96,17 @@ namespace IC_BPT
             BPT bpt = new BPT(numVertices);
             
             List<MST_Edge> arestas = ListarArestas();
+            Node[] raizes = new Node[numVertices];
 
             arestas.Sort((a, b) => a.peso.CompareTo(b.peso));
 
             int[] parent = new int[numVertices];
+            int[] rank = new int[numVertices];
 
-            for(int i = 0; i < numVertices; i++)
+            for (int i = 0; i < numVertices; i++)
             {
                 parent[i] = -1;
+                rank[i] = 0;
             }
 
             int edgeCount = 0;
@@ -108,26 +127,29 @@ namespace IC_BPT
                     if (bpt.Folhas[proxima.de] == null)
                     {
                         bpt.Folhas[proxima.de] = new Node(proxima.de);
+                        raizes[proxima.de] = bpt.Folhas[proxima.de];
                     }
 
                     if (bpt.Folhas[proxima.para] == null)
                     {
                         bpt.Folhas[proxima.para] = new Node(proxima.para);
+                        raizes[proxima.para] = bpt.Folhas[proxima.para];
                     }
 
-
                     nova_aresta = new Node(proxima.de, proxima.para, proxima.peso);
-                    pai1 = bpt.Folhas[proxima.de].EncontrarPai();
-                    pai2 = bpt.Folhas[proxima.para].EncontrarPai();
+                    pai1 = raizes[x];
+                    pai2 = raizes[y];
+
+                    raizes[x] = nova_aresta;
+                    raizes[y] = nova_aresta;
 
                     nova_aresta.esq = pai1;
                     nova_aresta.dir = pai2;
                     pai1.pai = nova_aresta;
                     pai2.pai = nova_aresta;
 
-
                     mst.AdicionarAresta(proxima.de, proxima.para, proxima.peso);
-                    Union(parent, x, y);
+                    Union(parent,rank, x, y);
                     edgeCount++;
                 }
 

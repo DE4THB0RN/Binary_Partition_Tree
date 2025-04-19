@@ -34,5 +34,13 @@ namespace IC_BPT
             Mst.Add(new MST_Edge(de, para, peso));
         }
 
+        public void PrintMST()
+        {
+            foreach (MST_Edge aresta in Mst)
+            {
+                Console.WriteLine($"Aresta: {aresta.de} - {aresta.para} Peso: {aresta.peso}");
+            }
+        }
+
     }
 }
