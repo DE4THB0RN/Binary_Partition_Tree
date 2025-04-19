@@ -97,6 +97,7 @@ namespace IC_BPT
 
         public Node Raiz;
         public Node[] Folhas;
+        public int[] visitCount;
 
         public BPT(int numVertices)
         {
@@ -104,18 +105,48 @@ namespace IC_BPT
         }
 
 
-        public Node SegmentarBPT(int seed)
+        public List<MST_Edge> AdicionarSeeds(int[] seed)
         {
-            Node tmp = Folhas[seed];
-            tmp.Marca++;
+            List<MST_Edge> ws_cuts = new List<MST_Edge>();
 
-            while (tmp != Raiz || tmp.Marca < 2)
+            Node tmp;
+            for (int i = 0; i < seed.Length; i++)
             {
-                tmp = tmp.pai;
-                tmp.Marca++;
+                tmp = Folhas[seed[i]];
+                while (tmp != Raiz && tmp.Marca != 2)
+                {
+                    tmp = tmp.pai;
+                    tmp.Marca++;
+                    if (tmp.Marca == 2)
+                    {
+                        ws_cuts.Add(new MST_Edge(tmp.GetDe(), tmp.GetPara(), tmp.GetPeso()));
+                    }
+                }
+            }
+            
+            return ws_cuts;
+        }
+
+        public List<MST_Edge> RemoverSeeds(int[] seed)
+        {
+            List<MST_Edge> ws_cuts = new List<MST_Edge>();
+
+            Node tmp;
+            for (int i = 0; i < seed.Length; i++)
+            {
+                tmp = Folhas[seed[i]];
+                while (tmp != Raiz && tmp.Marca != 1)
+                {
+                    tmp = tmp.pai;
+                    tmp.Marca--;
+                    if (tmp.Marca == 1)
+                    {
+                        ws_cuts.Add(new MST_Edge(tmp.GetDe(), tmp.GetPara(), tmp.GetPeso()));
+                    }
+                }
             }
 
-            return tmp;
+            return ws_cuts;
         }
 
         public void PrintBPT()
