@@ -210,7 +210,7 @@ namespace IC_BPT
 
         private void Recolorir(Node node, Grafo grafo, int cor, int sumir)
         {
-            if(node == null || (node.GetCor() != sumir || node.GetCor() != -1)) return;
+            if(node == null || (node.GetCor() != sumir && node.GetCor() != -1)) return;
 
             Recolorir(node.esq, grafo, cor, sumir);
 
@@ -301,7 +301,6 @@ namespace IC_BPT
                 Console.WriteLine(" ]");
             }
         }
-
 
     }
 }
