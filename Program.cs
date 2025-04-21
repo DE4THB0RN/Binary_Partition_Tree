@@ -40,7 +40,7 @@ while (control > 0)
         Console.Write("[ ");
         for (int i = 0; i < bpt.Folhas.Length; i++)
         {
-            if (!seeds.Contains(bpt.Folhas[i].GetVertice()))
+            if (!seeds.Contains(bpt.Folhas[i].GetVertice()) && !seedsAtuais.Contains(bpt.Folhas[i].GetVertice()))
             {
                 Console.Write(bpt.Folhas[i].GetVertice());
                 if(i < bpt.Folhas.Length - 1) Console.Write(", ");
@@ -53,13 +53,12 @@ while (control > 0)
 
         seed = Int32.Parse(Console.ReadLine());
 
-        if (seeds.Contains(seed))
+        if (seeds.Contains(seed) || seedsAtuais.Contains(seed))
         {
             Console.WriteLine("Vertice ja inserido");
         }
         else
         {
-            seeds.Add(seed);
             seedsAtuais.Add(seed);
             Console.WriteLine("Vertice " + seed + " adicionado");
         }
@@ -98,6 +97,10 @@ while (control > 0)
     else if (control == 3)
     {
         MST_Edge[] ws_cuts = bpt.AdicionarSeeds(seedsAtuais.ToArray(), grafo).ToArray();
+        foreach (int i in seedsAtuais)
+        {
+            seeds.Add(i);
+        }
         for (int i = 0; i < ws_cuts.Length; i++)
         {
             Console.WriteLine("Aresta: " + ws_cuts[i].para + " - " + ws_cuts[i].de + " peso - " + ws_cuts[i].peso);
