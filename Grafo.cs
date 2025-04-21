@@ -41,6 +41,9 @@ namespace IC_BPT
     {
         public List<Vertex> grafo;
         public MST mst;
+        public List<MST_Edge> WsEdges;
+        public int numCores;
+        public Dictionary<int, int> tamCores;
 
         private int numVertices;
 
@@ -53,12 +56,21 @@ namespace IC_BPT
             {
                 grafo.Add(new Vertex(i));
             }
+            WsEdges = [];
+            numCores = 0;
+            tamCores = new Dictionary<int, int>();
         }
 
         public void AdicionarAresta(int origem, int destino, int peso)
         {
             grafo[origem].AdicionarAresta(destino,peso);
             grafo[destino].AdicionarAresta(origem, peso);
+        }
+
+        public void RemoverAresta(int origem, int destino, int peso)
+        {
+            grafo[origem].arestas.RemoveAll(e => e.vertice == destino && e.peso == peso);
+            grafo[destino].arestas.RemoveAll(e => e.vertice == origem && e.peso == peso);
         }
 
         public void PrintCores()
@@ -84,11 +96,6 @@ namespace IC_BPT
             return arestas;
         }
 
-        public int Tamanho()
-        {
-            return numVertices;
-        }
-
         private int Find(int[] parent, int q)
         {
             int r = q,tmp;
@@ -102,7 +109,7 @@ namespace IC_BPT
             return r;
         }
 
-        private void swap(int[] rank, int x, int y)
+        private void Swap(int[] rank, int x, int y)
         {
             int temp = rank[x];
             rank[x] = rank[y];
@@ -112,7 +119,7 @@ namespace IC_BPT
         private void Union(int[] parent,int[] rank, int x, int y)
         {
             if (rank[x] > rank[y])
-                swap(rank, x, y);
+                Swap(rank, x, y);
             if (rank[x] == rank[y])
                 rank[y]++;
 
@@ -124,6 +131,7 @@ namespace IC_BPT
             BPT bpt = new BPT(numVertices);
             
             List<MST_Edge> arestas = ListarArestas();
+
             Node[] raizes = new Node[numVertices];
 
             arestas.Sort((a, b) => a.peso.CompareTo(b.peso));
@@ -185,9 +193,47 @@ namespace IC_BPT
             }
 
             bpt.Raiz = nova_aresta;
+            mst.MstToGrafo(numVertices);
 
             return bpt;
         }
 
+        public void RemoverWs_Edge(MST_Edge ws)
+        {
+            WsEdges.Remove(ws);
+            mst.AdicionarWSEdge(ws);
+        }
+
+        public void AdicionarWs_Edge(MST_Edge ws)
+        {
+            WsEdges.Add(ws);
+            mst.RemoverWSEdge(ws);
+        }
+
+        public void ColorirGrafo(int seed)
+        {
+            bool[] visitados = new bool[numVertices];
+            tamCores.Add(numCores, 0);
+            mst.Colorir(seed,numCores, visitados, this, tamCores);
+            numCores++;
+        }
+
+        public void RecolorirGrafo(MST_Edge corte)
+        {
+            bool[] visitados = new bool[numVertices];
+            int cor1 = grafo[corte.de].cor;
+            int cor2 = grafo[corte.para].cor;
+
+            if (tamCores[cor1] > tamCores[cor2])
+            {
+                tamCores.Remove(cor2);
+                mst.Colorir(corte.para, cor1, visitados, this, tamCores);
+            }
+            else
+            {
+                tamCores.Remove(cor1);
+                mst.Colorir(corte.de, cor2, visitados, this, tamCores);
+            }
+        }
     }
 }
