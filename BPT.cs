@@ -21,11 +21,13 @@ namespace IC_BPT
         private int de;
         private int para;
         private int peso;
+        private int cor;
 
         public Node(int vertice)
         {
             this.vertice = vertice;
             e_folha = true;
+            cor = -1;
         }
 
         public Node(int de, int para, int peso)
@@ -34,6 +36,7 @@ namespace IC_BPT
             this.para = para;
             this.peso = peso;
             e_folha = false;
+            cor = -1;
         }
 
         public int GetVertice()
@@ -56,6 +59,11 @@ namespace IC_BPT
             return peso;
         }
 
+        public int GetCor()
+        {
+            return cor;
+        }
+
         public void SetVertice(int vertice)
         {
             this.vertice = vertice;
@@ -76,7 +84,10 @@ namespace IC_BPT
             this.peso = peso;
         }
 
-
+        public void SetCor(int cor)
+        {
+            this.cor = cor;
+        }
 
         public Node EncontrarPai()
         {
@@ -97,47 +108,64 @@ namespace IC_BPT
 
         public Node Raiz;
         public Node[] Folhas;
-        public int[] visitCount;
+        private Dictionary<int, int> tamCores;
+        private int numCores;
 
         public BPT(int numVertices)
         {
             Folhas = new Node[numVertices];
+            numCores = 0;
+            tamCores = new Dictionary<int, int>();
         }
 
-        public List<MST_Edge> AdicionarSeeds(int[] seed)
+        public List<MST_Edge> AdicionarSeeds(int[] seed, Grafo grafo)
         {
+
             List<MST_Edge> ws_cuts = new List<MST_Edge>();
 
             Node tmp;
             for (int i = 0; i < seed.Length; i++)
             {
+
                 tmp = Folhas[seed[i]];
+
+                tmp.SetCor(numCores);
+                tamCores.Add(numCores, 0);
+                tamCores[numCores]++;
+
                 while (tmp != Raiz && tmp.Marca != 2)
                 {
-                    
+
                     tmp = tmp.pai;
                     tmp.Marca++;
 
-                    if (tmp.e_folha)
-                    {
-                        Console.WriteLine("Folha: " + tmp.GetVertice() + " visita - " + tmp.Marca);
-                    }
-                    else
-                    {
-                        Console.WriteLine("Aresta: " + tmp.GetDe() + " -> " + tmp.GetPara() + " peso - " + tmp.GetPeso() + " visita - " + tmp.Marca);
-                    }
+                    tmp.SetCor(numCores);
+
+                    //if (tmp.e_folha)
+                    //{
+                    //    Console.WriteLine("Folha: " + tmp.GetVertice() + " visita - " + tmp.Marca);
+                    //}
+                    //else
+                    //{
+                    //    Console.WriteLine("Aresta: " + tmp.GetDe() + " -> " + tmp.GetPara() + " peso - " + tmp.GetPeso() + " visita - " + tmp.Marca);
+                    //}
+
+
 
                     if (tmp.Marca == 2)
                     {
                         ws_cuts.Add(new MST_Edge(tmp.GetDe(), tmp.GetPara(), tmp.GetPeso()));
                     }
                 }
+
+                ColorirVertices(tmp, grafo, numCores);
+
+                numCores++;
             }
-            
             return ws_cuts;
         }
 
-        public List<MST_Edge> RemoverSeeds(int[] seed)
+        public List<MST_Edge> RemoverSeeds(int[] seed, Grafo grafo)
         {
             List<MST_Edge> ws_cuts = new List<MST_Edge>();
 
@@ -154,9 +182,68 @@ namespace IC_BPT
                         ws_cuts.Add(new MST_Edge(tmp.GetDe(), tmp.GetPara(), tmp.GetPeso()));
                     }
                 }
+
+                RecolorirVertices(tmp, grafo);
             }
 
             return ws_cuts;
+        }
+
+        public void ColorirVertices(Node node, Grafo grafo, int cor)
+        {
+            if(node == null || (!node.e_folha && (node.GetCor() != -1 && node.GetCor() != cor))) return;
+
+            ColorirVertices(node.esq, grafo, cor);
+
+            if (node.e_folha)
+            {
+                node.SetCor(cor);
+                tamCores[cor]++;
+                grafo.grafo[node.GetVertice()].cor = cor;
+                return;
+            }
+            
+
+            ColorirVertices(node.dir, grafo, cor);
+
+        }
+
+        private void Recolorir(Node node, Grafo grafo, int cor, int sumir)
+        {
+            if(node == null || (node.GetCor() != sumir || node.GetCor() != -1)) return;
+
+            Recolorir(node.esq, grafo, cor, sumir);
+
+            if (node.e_folha)
+            {
+                node.SetCor(cor);
+                tamCores[cor]++;
+                grafo.grafo[node.GetVertice()].cor = cor;
+                return;
+            }
+
+            node.SetCor(-1);
+            
+            Recolorir(node.dir, grafo, cor, sumir);
+        }
+
+        public void RecolorirVertices(Node node, Grafo grafo)
+        {
+            int cor1 = node.esq.GetCor();
+            int cor2 = node.dir.GetCor();
+
+            if (tamCores[cor1] > tamCores[cor2])
+            {
+                node.SetCor(cor1);
+                tamCores.Remove(cor2);
+                Recolorir(node.dir, grafo, cor1, cor2);
+            }
+            else
+            {
+                node.SetCor(cor2);
+                tamCores.Remove(cor1);
+                Recolorir(node.esq, grafo, cor2, cor1);
+            }
         }
 
         public void PrintBPT()
@@ -214,5 +301,7 @@ namespace IC_BPT
                 Console.WriteLine(" ]");
             }
         }
+
+
     }
 }

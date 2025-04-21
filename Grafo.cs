@@ -17,9 +17,29 @@ namespace IC_BPT
             this.peso = peso;
         }
     }
+
+    class Vertex
+    {
+        public int id;
+        public int cor;
+        public List<Edge> arestas;
+
+        public Vertex(int id)
+        {
+            this.id = id;
+            arestas = new List<Edge>();
+            cor = -1;
+        }
+
+        public void AdicionarAresta(int vertice, int peso)
+        {
+            arestas.Add(new Edge(vertice, peso));
+        }
+    }
+
     internal class Grafo
     {
-        public List<List<Edge>> grafo;
+        public List<Vertex> grafo;
         public MST mst;
 
         private int numVertices;
@@ -27,18 +47,27 @@ namespace IC_BPT
         public Grafo(int numVertices)
         {
             this.numVertices = numVertices;
-            grafo = new List<List<Edge>>(numVertices);
+            grafo = new List<Vertex>(numVertices);
             mst = new MST();
             for (int i = 0; i < numVertices; i++)
             {
-                grafo.Add(new List<Edge>());
+                grafo.Add(new Vertex(i));
             }
         }
 
         public void AdicionarAresta(int origem, int destino, int peso)
         {
-            grafo[origem].Add(new Edge(destino, peso));
-            grafo[destino].Add(new Edge(origem, peso));
+            grafo[origem].AdicionarAresta(destino,peso);
+            grafo[destino].AdicionarAresta(origem, peso);
+        }
+
+        public void PrintCores()
+        {
+            Console.WriteLine("Cores: ");
+            foreach (Vertex vertex in grafo)
+            {
+                Console.WriteLine("Vertice " + vertex.id + " de cor " + vertex.cor);
+            }
         }
 
         public List<MST_Edge> ListarArestas()
@@ -46,7 +75,7 @@ namespace IC_BPT
             List<MST_Edge> arestas = new List<MST_Edge>();
             for (int i = 0; i < numVertices; i++)
             {
-                foreach (Edge aresta in grafo[i])
+                foreach (Edge aresta in grafo[i].arestas)
                 {
                     arestas.Add(new MST_Edge(i, aresta.vertice, aresta.peso));
                 }

@@ -31,7 +31,7 @@ int seed;
 
 while (control > 0)
 {
-    Console.WriteLine("Inserir seeds: 1  -  Remover seeds: 2  - Processar WS(adição): 3 - Processar WS(remoção): 4 - Sair: 0");
+    Console.WriteLine("Inserir seeds: 1  -  Remover seeds: 2  - Processar WS(adição): 3 - Processar WS(remoção): 4 - Printar cores: 5 - Sair: 0");
     control = Int32.Parse(Console.ReadLine());
 
     if (control == 1)
@@ -97,7 +97,7 @@ while (control > 0)
     }
     else if (control == 3)
     {
-        MST_Edge[] ws_cuts = bpt.AdicionarSeeds(seedsAtuais.ToArray()).ToArray();
+        MST_Edge[] ws_cuts = bpt.AdicionarSeeds(seedsAtuais.ToArray(), grafo).ToArray();
         for (int i = 0; i < ws_cuts.Length; i++)
         {
             Console.WriteLine("Aresta: " + ws_cuts[i].para + " - " + ws_cuts[i].de + " peso - " + ws_cuts[i].peso);
@@ -106,12 +106,16 @@ while (control > 0)
     }
     else if (control == 4)
     {
-        MST_Edge[] ws_cuts = bpt.RemoverSeeds(seedsRemovidas.ToArray()).ToArray();
+        MST_Edge[] ws_cuts = bpt.RemoverSeeds(seedsRemovidas.ToArray(), grafo).ToArray();
         for (int i = 0; i < ws_cuts.Length; i++)
         {
             Console.WriteLine("Aresta: " + ws_cuts[i].para + " - " + ws_cuts[i].de + " peso - " + ws_cuts[i].peso);
         }
         seedsRemovidas.Clear();
+    }
+    else if (control == 5)
+    {
+        grafo.PrintCores();
     }
     else if (control == 0)
     {
@@ -119,6 +123,7 @@ while (control > 0)
     }
     else
     {
+        control = -1;
         Console.WriteLine("Engraçadinho");
     }
 }
