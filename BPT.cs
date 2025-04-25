@@ -144,7 +144,6 @@ namespace IC_BPT
             return ws_cuts;
         }
 
-
         public void PrintBPT()
         {
             List<List<Node>> ordenadaNivel = new List<List<Node>>();
