@@ -52,8 +52,35 @@ namespace IC_BPT{
 
             if(matriz == null) return null;
 
-            
+            Grafo resp = new Grafo(width * height);
 
+            for (int i = 0; i < width; i++)
+            {
+                for (int j = 0; j < height; j++)
+                {
+                    if (i < width - 1)
+                    {
+                        resp.AdicionarAresta(i * height + j, (i + 1) * height + j, Math.Abs(matriz[i][j] - matriz[i + 1][j]));
+                    }
+
+                    if (j > 0)
+                    {
+                        resp.AdicionarAresta(i * height + j, i * height + j - 1, Math.Abs(matriz[i][j] - matriz[i][j - 1]));
+                    }
+
+                    if (j > 0 && i < width - 1)
+                    {
+                        resp.AdicionarAresta(i * height + j, (i + 1) * height + j - 1, Math.Abs(matriz[i][j] - matriz[i + 1][j - 1]));
+                    }
+
+                    if (j < height - 1 && i < width - 1)
+                    {
+                        resp.AdicionarAresta(i * height + j, (i + 1) * height + j + 1, Math.Abs(matriz[i][j] - matriz[i + 1][j + 1]));
+                    }
+                }
+            }
+
+            return resp;
         }
 
 
