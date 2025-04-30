@@ -1,25 +1,25 @@
 ﻿
 using IC_BPT;
 
-Grafo grafo = new Grafo(8);
+// Grafo grafo = new Grafo(8);
 
-grafo.AdicionarAresta(0, 1, 2);
-grafo.AdicionarAresta(0, 4, 0);
-grafo.AdicionarAresta(1, 5, 5);
-grafo.AdicionarAresta(1, 2, 4);
-grafo.AdicionarAresta(2, 3, 0);
-grafo.AdicionarAresta(2, 6, 6);
-grafo.AdicionarAresta(3, 7, 1);
-grafo.AdicionarAresta(4, 5, 1);
-grafo.AdicionarAresta(5, 6, 6);
-grafo.AdicionarAresta(6, 7, 0);
+// grafo.AdicionarAresta(0, 1, 2);
+// grafo.AdicionarAresta(0, 4, 0);
+// grafo.AdicionarAresta(1, 5, 5);
+// grafo.AdicionarAresta(1, 2, 4);
+// grafo.AdicionarAresta(2, 3, 0);
+// grafo.AdicionarAresta(2, 6, 6);
+// grafo.AdicionarAresta(3, 7, 1);
+// grafo.AdicionarAresta(4, 5, 1);
+// grafo.AdicionarAresta(5, 6, 6);
+// grafo.AdicionarAresta(6, 7, 0);
 
+Grafo grafo = PgmRead.CriarMatriz("../../../teste1.pgm");
 
 BPT bpt = grafo.Kruskal();
 
 
-grafo.mst.PrintMST();
-
+//grafo.mst.PrintMST();
 
 bpt.PrintBPT();
 

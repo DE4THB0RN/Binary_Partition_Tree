@@ -19,33 +19,29 @@ namespace IC_BPT{
                 string[][] separado = new string[width][];
                 int[][] resp = new int[width][];
 
+                int fileLine = 4;
+
                 for(int i = 0; i < width; i++){
-                    separado[i] = linhasArq[i + 4].Split(" ");
                     resp[i] = new int[height];
                 }
 
                 for(int i = 0; i < width; i++){
                     for(int j = 0; j < height; j++){
-                        if(i == width - 1){
-                            string tmp = separado[i][j].Replace('\n',' ').TrimEnd();
-                            resp[i][j] = Int32.Parse(tmp);
-                        }
-                        else{
-                            resp[i][j] = Int32.Parse(separado[i][j]);
-                        }
+                        
+                        string tmp = linhasArq[fileLine].Replace('\n',' ').TrimEnd();
+                        resp[i][j] = Int32.Parse(tmp);
+                        fileLine++;
                     }
                 }
 
                 return resp;
-
-                
             }
 
             Console.WriteLine("Arquivo invalido");
             return null;
         }
 
-        static Grafo CriarMatriz(string fileName){
+        public static Grafo CriarMatriz(string fileName){
             
 
             int[][] matriz = MatrizImagem(fileName);
