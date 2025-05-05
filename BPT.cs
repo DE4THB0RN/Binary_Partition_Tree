@@ -70,7 +70,7 @@ namespace IC_BPT
             Folhas = new Node[numVertices];
         }
 
-        public List<MST_Edge> AdicionarSeeds(int[] seed, Grafo grafo)
+        public List<MST_Edge> AdicionarSeeds(int[] seed, Grafo grafo, MST mst, Grafo MstGrafo)
         {
 
             List<MST_Edge> ws_cuts = new List<MST_Edge>();
@@ -106,15 +106,15 @@ namespace IC_BPT
 
                 if (ws_count > 0)
                 {
-                    grafo.AdicionarWs_Edge(ws_cuts[ws_count - 1]);
+                    mst.RemoverWSEdge(ws_cuts[ws_count - 1], MstGrafo);
                 }
-                grafo.ColorirGrafo(seed[i]);
+                grafo.ColorirGrafo(seed[i], mst, MstGrafo);
 
             }
             return ws_cuts;
         }
 
-        public List<MST_Edge> RemoverSeeds(int[] seed, Grafo grafo)
+        public List<MST_Edge> RemoverSeeds(int[] seed, Grafo grafo, MST mst, Grafo MstGrafo)
         {
             List<MST_Edge> ws_cuts = new List<MST_Edge>();
             int ws_count = 0;
@@ -133,10 +133,10 @@ namespace IC_BPT
                     }
                 }
 
-                if(ws_count > 0)
+                if (ws_count > 0)
                 {
-                    grafo.RemoverWs_Edge(ws_cuts[ws_count - 1]);
-                    grafo.RecolorirGrafo(ws_cuts[ws_count - 1]);
+                    mst.AdicionarWSEdge(ws_cuts[ws_count - 1], MstGrafo);
+                    grafo.RecolorirGrafo(ws_cuts[ws_count - 1], mst, MstGrafo);
                 }
 
             }
@@ -151,7 +151,7 @@ namespace IC_BPT
             Console.WriteLine("BPT:");
             Queue<Node> fila = new Queue<Node>();
             fila.Enqueue(Raiz);
-            int nivel = 0,len;
+            int nivel = 0, len;
 
             while (fila.Count > 0)
             {
@@ -180,7 +180,7 @@ namespace IC_BPT
             foreach (List<Node> level in ordenadaNivel)
             {
                 Console.Write("[ ");
-                for(int i = 0; i < level.Count; i++)
+                for (int i = 0; i < level.Count; i++)
                 {
                     if (level[i].e_folha)
                     {
@@ -188,7 +188,7 @@ namespace IC_BPT
                     }
                     else
                     {
-                        Console.Write("Aresta: " + level[i].GetDe() + " -> " + level[i].GetPara() + " peso - " + level[i].GetPeso() );
+                        Console.Write("Aresta: " + level[i].GetDe() + " -> " + level[i].GetPara() + " peso - " + level[i].GetPeso());
                     }
 
                     if (i < level.Count - 1)

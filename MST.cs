@@ -23,7 +23,6 @@ namespace IC_BPT
     internal class MST
     {
         public List<MST_Edge> Mst;
-        public Grafo MstGrafo;
 
         public MST()
         {
@@ -43,29 +42,30 @@ namespace IC_BPT
             }
         }
 
-        public void RemoverWSEdge(MST_Edge ws)
+        public void RemoverWSEdge(MST_Edge ws, Grafo MstGrafo)
         {
             Mst.Remove(ws);
             MstGrafo.RemoverAresta(ws.de, ws.para, ws.peso);
         }
 
-        public void AdicionarWSEdge(MST_Edge ws)
+        public void AdicionarWSEdge(MST_Edge ws, Grafo MstGrafo)
         {
             Mst.Add(ws);
             MstGrafo.AdicionarAresta(ws.de, ws.para, ws.peso);
         }
 
-        public void MstToGrafo(int numVertices)
+        public Grafo MstToGrafo(int numVertices)
         {
-            MstGrafo = new Grafo(numVertices);
+            Grafo MstGrafo = new Grafo(numVertices);
 
             foreach (MST_Edge aresta in Mst)
             {
                 MstGrafo.AdicionarAresta(aresta.de, aresta.para, aresta.peso);
             }
+            return MstGrafo;
         }
 
-        public void Colorir(int vertice, int cor, bool[] visitados, Grafo grafo, Dictionary<int,int> tamCores)
+        public void Colorir(int vertice, int cor, bool[] visitados, Grafo grafo, Dictionary<int, int> tamCores, Grafo MstGrafo)
         {
             visitados[vertice] = true;
             grafo.grafo[vertice].cor = cor;
@@ -75,7 +75,7 @@ namespace IC_BPT
             {
                 if (!visitados[MstGrafo.grafo[vertice].arestas[i].vertice])
                 {
-                    Colorir(MstGrafo.grafo[vertice].arestas[i].vertice, cor, visitados, grafo, tamCores );
+                    Colorir(MstGrafo.grafo[vertice].arestas[i].vertice, cor, visitados, grafo, tamCores, MstGrafo);
                 }
             }
         }

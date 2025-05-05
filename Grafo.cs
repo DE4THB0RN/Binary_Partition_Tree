@@ -40,30 +40,32 @@ namespace IC_BPT
     internal class Grafo
     {
         public List<Vertex> grafo;
-        public MST mst;
-        public List<MST_Edge> WsEdges;
+
         public int numCores;
         public Dictionary<int, int> tamCores;
 
         private int numVertices;
 
+        public int Tamanho()
+        {
+            return numVertices;
+        }
+
         public Grafo(int numVertices)
         {
             this.numVertices = numVertices;
             grafo = new List<Vertex>(numVertices);
-            mst = new MST();
             for (int i = 0; i < numVertices; i++)
             {
                 grafo.Add(new Vertex(i));
             }
-            WsEdges = [];
             numCores = 0;
             tamCores = new Dictionary<int, int>();
         }
 
         public void AdicionarAresta(int origem, int destino, int peso)
         {
-            grafo[origem].AdicionarAresta(destino,peso);
+            grafo[origem].AdicionarAresta(destino, peso);
             grafo[destino].AdicionarAresta(origem, peso);
         }
 
@@ -98,7 +100,7 @@ namespace IC_BPT
 
         private int Find(int[] parent, int q)
         {
-            int r = q,tmp;
+            int r = q, tmp;
             while (parent[r] >= 0) r = parent[r];
             while (parent[q] >= 0)
             {
@@ -116,7 +118,7 @@ namespace IC_BPT
             rank[y] = temp;
         }
 
-        private void Union(int[] parent,int[] rank, int x, int y)
+        private void Union(int[] parent, int[] rank, int x, int y)
         {
             if (rank[x] > rank[y])
                 Swap(rank, x, y);
@@ -126,10 +128,10 @@ namespace IC_BPT
             parent[x] = y;
         }
 
-        public BPT Kruskal()
+        public BPT Kruskal(MST mst)
         {
             BPT bpt = new BPT(numVertices);
-            
+
             List<MST_Edge> arestas = ListarArestas();
 
             Node[] raizes = new Node[numVertices];
@@ -186,7 +188,7 @@ namespace IC_BPT
                     pai2.pai = nova_aresta;
 
                     mst.AdicionarAresta(proxima.de, proxima.para, proxima.peso);
-                    Union(parent,rank, x, y);
+                    Union(parent, rank, x, y);
                     edgeCount++;
                 }
 
@@ -198,27 +200,15 @@ namespace IC_BPT
             return bpt;
         }
 
-        public void RemoverWs_Edge(MST_Edge ws)
-        {
-            WsEdges.Remove(ws);
-            mst.AdicionarWSEdge(ws);
-        }
-
-        public void AdicionarWs_Edge(MST_Edge ws)
-        {
-            WsEdges.Add(ws);
-            mst.RemoverWSEdge(ws);
-        }
-
-        public void ColorirGrafo(int seed)
+        public void ColorirGrafo(int seed, MST mst, Grafo MstGrafo)
         {
             bool[] visitados = new bool[numVertices];
             tamCores.Add(numCores, 0);
-            mst.Colorir(seed,numCores, visitados, this, tamCores);
+            mst.Colorir(seed, numCores, visitados, this, tamCores, MstGrafo);
             numCores++;
         }
 
-        public void RecolorirGrafo(MST_Edge corte)
+        public void RecolorirGrafo(MST_Edge corte, MST mst, Grafo MstGrafo)
         {
             bool[] visitados = new bool[numVertices];
             int cor1 = grafo[corte.de].cor;
@@ -227,12 +217,12 @@ namespace IC_BPT
             if (tamCores[cor1] > tamCores[cor2])
             {
                 tamCores.Remove(cor2);
-                mst.Colorir(corte.para, cor1, visitados, this, tamCores);
+                mst.Colorir(corte.para, cor1, visitados, this, tamCores, MstGrafo);
             }
             else
             {
                 tamCores.Remove(cor1);
-                mst.Colorir(corte.de, cor2, visitados, this, tamCores);
+                mst.Colorir(corte.de, cor2, visitados, this, tamCores, MstGrafo);
             }
         }
     }

@@ -15,13 +15,14 @@ using IC_BPT;
 // grafo.AdicionarAresta(6, 7, 0);
 
 Grafo grafo = PgmRead.CriarMatriz("../../../teste1.pgm");
-
-BPT bpt = grafo.Kruskal();
+MST mst = new MST();
+BPT bpt = grafo.Kruskal(mst);
+Grafo MstGrafo = mst.MstToGrafo(grafo.Tamanho());
 
 
 //grafo.mst.PrintMST();
 
-bpt.PrintBPT();
+//bpt.PrintBPT();
 
 int control = 1;
 List<int> seeds = new List<int>();
@@ -43,9 +44,9 @@ while (control > 0)
             if (!seeds.Contains(bpt.Folhas[i].GetVertice()) && !seedsAtuais.Contains(bpt.Folhas[i].GetVertice()))
             {
                 Console.Write(bpt.Folhas[i].GetVertice());
-                if(i < bpt.Folhas.Length - 1) Console.Write(", ");
+                if (i < bpt.Folhas.Length - 1) Console.Write(", ");
             }
-                
+
         }
         Console.Write(" ]");
 
@@ -92,11 +93,12 @@ while (control > 0)
                 Console.WriteLine("Seed nao encontrada");
             }
         }
-            
+
     }
     else if (control == 3)
     {
-        MST_Edge[] ws_cuts = bpt.AdicionarSeeds(seedsAtuais.ToArray(), grafo).ToArray();
+        MST_Edge[] ws_cuts = bpt.AdicionarSeeds(seedsAtuais.ToArray(), grafo, mst, MstGrafo
+    ).ToArray();
         foreach (int i in seedsAtuais)
         {
             seeds.Add(i);
@@ -109,7 +111,8 @@ while (control > 0)
     }
     else if (control == 4)
     {
-        MST_Edge[] ws_cuts = bpt.RemoverSeeds(seedsRemovidas.ToArray(), grafo).ToArray();
+        MST_Edge[] ws_cuts = bpt.RemoverSeeds(seedsRemovidas.ToArray(), grafo, mst, MstGrafo
+    ).ToArray();
         for (int i = 0; i < ws_cuts.Length; i++)
         {
             Console.WriteLine("Aresta: " + ws_cuts[i].para + " - " + ws_cuts[i].de + " peso - " + ws_cuts[i].peso);
