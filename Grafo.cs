@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 
 namespace IC_BPT
 {
+
     class Edge
     {
         public int vertice;
@@ -55,6 +56,7 @@ namespace IC_BPT
         {
             this.numVertices = numVertices;
             grafo = new List<Vertex>(numVertices);
+            Console.WriteLine("Criando grafo de tamanho " + numVertices);
             for (int i = 0; i < numVertices; i++)
             {
                 grafo.Add(new Vertex(i));

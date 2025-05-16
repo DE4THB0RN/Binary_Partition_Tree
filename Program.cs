@@ -1,4 +1,5 @@
 ﻿
+using System.Diagnostics;
 using IC_BPT;
 
 // Grafo grafo = new Grafo(8);
@@ -14,9 +15,18 @@ using IC_BPT;
 // grafo.AdicionarAresta(5, 6, 6);
 // grafo.AdicionarAresta(6, 7, 0);
 
-Grafo grafo = PgmRead.CriarMatriz("../../../teste1.pgm");
+
+Stopwatch tempo = new Stopwatch();
+tempo.Start();
+Grafo grafo = PgmRead.CriarMatriz("../../../teste4.pgm");
+tempo.Stop();
+Console.WriteLine("Tempo para criar o grafo: " + tempo.ElapsedMilliseconds + "ms");
 MST mst = new MST();
+Stopwatch tempoKruskal = new Stopwatch();
+tempoKruskal.Start();
 BPT bpt = grafo.Kruskal(mst);
+tempoKruskal.Stop();
+Console.WriteLine("Tempo para fazer a BPT: " + tempoKruskal.ElapsedMilliseconds + "ms");
 Grafo MstGrafo = mst.MstToGrafo(grafo.Tamanho());
 
 
@@ -37,18 +47,7 @@ while (control > 0)
 
     if (control == 1)
     {
-        Console.WriteLine("Vertices disponiveis:");
-        Console.Write("[ ");
-        for (int i = 0; i < bpt.Folhas.Length; i++)
-        {
-            if (!seeds.Contains(bpt.Folhas[i].GetVertice()) && !seedsAtuais.Contains(bpt.Folhas[i].GetVertice()))
-            {
-                Console.Write(bpt.Folhas[i].GetVertice());
-                if (i < bpt.Folhas.Length - 1) Console.Write(", ");
-            }
-
-        }
-        Console.Write(" ]");
+        Console.WriteLine("Numero de vértices: " + grafo.Tamanho());
 
         Console.WriteLine("\nEscolha um vertice: ");
 

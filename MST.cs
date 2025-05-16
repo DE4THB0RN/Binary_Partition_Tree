@@ -65,6 +65,7 @@ namespace IC_BPT
             return MstGrafo;
         }
 
+
         public void Colorir(int vertice, int cor, bool[] visitados, Grafo grafo, Dictionary<int, int> tamCores, Grafo MstGrafo)
         {
             visitados[vertice] = true;

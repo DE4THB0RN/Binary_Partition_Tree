@@ -28,6 +28,7 @@ namespace IC_BPT
             e_folha = true;
         }
 
+
         public Node(int de, int para, int peso)
         {
             this.de = de;
