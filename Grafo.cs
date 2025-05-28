@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 namespace IC_BPT
 {
 
-    class Edge
+    struct Edge
     {
         public int vertice;
         public int peso;
@@ -40,7 +40,7 @@ namespace IC_BPT
 
     internal class Grafo
     {
-        public List<Vertex> grafo;
+        public Vertex[] grafo;
 
         public int numCores;
         public Dictionary<int, int> tamCores;
@@ -55,14 +55,14 @@ namespace IC_BPT
         public Grafo(int numVertices)
         {
             this.numVertices = numVertices;
-            grafo = new List<Vertex>(numVertices);
+            grafo = new Vertex[numVertices];
             Console.WriteLine("Criando grafo de tamanho " + numVertices);
             for (int i = 0; i < numVertices; i++)
             {
-                grafo.Add(new Vertex(i));
+                grafo[i] = new Vertex(i);
             }
             numCores = 0;
-            tamCores = new Dictionary<int, int>();
+            tamCores = [];
         }
 
         public void AdicionarAresta(int origem, int destino, int peso)

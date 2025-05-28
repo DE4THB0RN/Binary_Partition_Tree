@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace IC_BPT
 {
-    class MST_Edge
+    struct MST_Edge
     {
         public int de;
         public int para;
