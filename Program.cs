@@ -18,7 +18,7 @@ using IC_BPT;
 
 Stopwatch tempo = new Stopwatch();
 tempo.Start();
-Grafo grafo = PgmRead.CriarMatriz("../../../teste4.pgm");
+Grafo grafo = PgmRead.CriarMatriz("../../../teste2.pgm");
 tempo.Stop();
 Console.WriteLine("Tempo para criar o grafo: " + tempo.ElapsedMilliseconds + "ms");
 MST mst = new MST();
